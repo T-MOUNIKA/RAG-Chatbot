@@ -1,9 +1,10 @@
+# 
+
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
-# Install system dependencies in one step and clean cache to reduce image size
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
@@ -13,18 +14,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libmagic1 && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy only requirements.txt first to leverage Docker cache for dependency installs
+# Copy requirements first
 COPY requirements.txt .
 
-# Upgrade pip and install python dependencies
+# Install python dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir langchain chromadb
-# Copy the application code last to maximize cache usage for dependencies
+
+# Install correct LangChain ecosystem packages
+RUN pip install --no-cache-dir langchain==0.2.11
+RUN pip install --no-cache-dir langchain-community
+RUN pip install --no-cache-dir langchain-openai
+RUN pip install --no-cache-dir chromadb
+
+# Copy all project files
 COPY . .
 
-# Set environment variable to ensure logs are output properly
 ENV PYTHONUNBUFFERED=1
 
-# Default command to run your FastAPI app with uvicorn
+# Run FastAPI app
 CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

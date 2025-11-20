@@ -18,3 +18,4 @@ langchain-classic
 langchain-text-splitters
 chromadb>=0.3.2
 langchain-chroma
+langchain-community
