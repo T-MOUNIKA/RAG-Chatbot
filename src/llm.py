@@ -1,10 +1,11 @@
 from langchain_openai import ChatOpenAI
+import os
 
 def get_llm():
     llm = ChatOpenAI(
-        api_key="xyz",
-        model="gpt-5-nano-2025-08-07",  # free tier friendly model
+        model=os.getenv("LLM_MODEL", "gpt-4o-mini"),
         temperature=0.0,
         max_retries=3
     )
+    return llm
 

@@ -1,7 +1,7 @@
 import os
 import chromadb
 
-CHROMA_DIR = os.getenv('CHROMA_PERSIST_DIR', '/app/chroma_data')
+CHROMA_DIR = os.getenv('CHROMA_PERSIST_DIR', './chroma_data')
 
 def get_chroma_client(persist_directory=None):
     persist_directory = persist_directory or CHROMA_DIR
